@@ -21,23 +21,23 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
+      # - name: Decode Keystore
+      #   run: |
+      #     echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
 
-      - name: Create key.properties
-        run: |
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=keystore.jks" >> android/key.properties
+      # - name: Create key.properties
+      #   run: |
+      #     echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+      #     echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+      #     echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+      #     echo "storeFile=keystore.jks" >> android/key.properties
 
       - name: Download Libraries
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.TOKEN }}
-          run-id: ${{ secrets.MEDIA3_RUN_ID }}
-          repository: ${{ secrets.MEDIA3_REPOSITORY }}
+          run-id: 19564336567
+          repository: Daydreamer-riri/Ghosten-Player
 
       - name: Download Libraries
         uses: actions/download-artifact@v4
@@ -50,11 +50,11 @@ jobs:
         run: |
           mkdir android/app/libs
           mv media3-extension/* android/app/libs
-          mv api/* android/app/libs
+          # mv api/* android/app/libs
 
       - name: Extract version from tag
         run: |
-          echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          echo "VERSION=2.4.0 >> $GITHUB_ENV
 
       - name: Calculate Build Number
         run: |
