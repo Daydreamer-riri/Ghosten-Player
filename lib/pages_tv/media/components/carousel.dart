@@ -324,6 +324,7 @@ class CarouselBackground extends StatelessWidget {
                       ? AsyncImage(
                         key: UniqueKey(),
                         src!,
+                        width: MediaQuery.of(context).size.width,
                         errorWidget:
                             (_, _, _) => Image.asset(switch (Theme.of(context).brightness) {
                               Brightness.dark => 'assets/tv/images/bg-pixel.webp',
