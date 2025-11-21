@@ -255,6 +255,7 @@ class _ChannelGridItem extends StatelessWidget {
       children: [
         FocusableImage(
           poster: item.image,
+          width: 200,
           fit: BoxFit.contain,
           padding: const EdgeInsets.all(36),
           httpHeaders: const {},
