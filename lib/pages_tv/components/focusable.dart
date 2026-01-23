@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'fluid_focusable.dart';
@@ -15,6 +14,7 @@ class Focusable extends StatefulWidget {
     this.selected,
     this.backgroundColor,
     this.selectedBackgroundColor,
+    this.focusNode,
   });
 
   final Widget child;
@@ -26,18 +26,34 @@ class Focusable extends StatefulWidget {
   final Color? selectedBackgroundColor;
   final GestureTapCallback? onTap;
   final ValueChanged<bool>? onFocusChange;
+  final FocusNode? focusNode;
 
   @override
   State<Focusable> createState() => _FocusableState();
 }
 
 class _FocusableState extends State<Focusable> {
-  final _focusNode = FocusNode();
+  late final FocusNode _focusNode;
+  late final bool _ownsFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.focusNode != null) {
+      _focusNode = widget.focusNode!;
+      _ownsFocusNode = false;
+    } else {
+      _focusNode = FocusNode();
+      _ownsFocusNode = true;
+    }
+  }
 
   @override
   void dispose() {
     super.dispose();
-    _focusNode.dispose();
+    if (_ownsFocusNode) {
+      _focusNode.dispose();
+    }
   }
 
   @override

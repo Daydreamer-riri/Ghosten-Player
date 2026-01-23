@@ -272,6 +272,16 @@ class _SeasonPage extends StatefulWidget {
 }
 
 class _SeasonPageState extends State<_SeasonPage> {
+  ScrollController? _scrollController;
+  final FocusNode _targetFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _targetFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilderHandler(
@@ -284,8 +294,23 @@ class _SeasonPageState extends State<_SeasonPage> {
                 : item.episodes.indexWhere((ep) => ep.episode == widget.nextToPlay?.episode);
 
         final focusIndex = nextToPlayIndex != -1 ? nextToPlayIndex : 0;
+        final paneWidth = MediaQuery.sizeOf(context).width * 0.6;
+        final itemWidth = (paneWidth - 16).clamp(0.0, double.infinity);
+        final itemHeight = itemWidth / 4;
+        final itemExtent = itemHeight + 16;
+        const headerHeight = 228.0;
+        final initialOffset = headerHeight + (itemExtent * focusIndex);
+
+        _scrollController ??= ScrollController(initialScrollOffset: initialOffset);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          if (item.episodes.isEmpty || focusIndex < 0 || focusIndex >= item.episodes.length) return;
+          FocusScope.of(context).requestFocus(_targetFocusNode);
+        });
 
         return CustomScrollView(
+          controller: _scrollController,
           cacheExtent: 1000,
           slivers: [
             SliverPadding(
@@ -378,8 +403,7 @@ class _SeasonPageState extends State<_SeasonPage> {
                 itemCount: item.episodes.length,
                 itemBuilder:
                     (context, index) => _EpisodeListTile(
-                      key: UniqueKey(),
-                      autofocus: index == focusIndex,
+                      focusNode: index == focusIndex ? _targetFocusNode : null,
                       episode: item.episodes[index],
                       scrapper: widget.scrapper,
                       onTap: () async {
@@ -423,6 +447,7 @@ class _EpisodeListTile extends StatelessWidget {
     required this.scrapper,
     this.autofocus,
     this.onTapMore,
+    this.focusNode,
   });
 
   final TVEpisode episode;
@@ -430,6 +455,7 @@ class _EpisodeListTile extends StatelessWidget {
   final bool? autofocus;
   final GestureTapCallback? onTap;
   final GestureTapCallback? onTapMore;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -443,7 +469,7 @@ class _EpisodeListTile extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                FocusableImage(autofocus: autofocus, poster: episode.poster, onTap: onTap),
+                FocusableImage(autofocus: autofocus, focusNode: focusNode, poster: episode.poster, onTap: onTap),
                 Padding(
                   padding: const EdgeInsets.all(4),
                   child: Column(

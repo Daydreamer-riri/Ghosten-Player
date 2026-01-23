@@ -17,6 +17,7 @@ class FocusableImage extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.selected,
     this.httpHeaders,
+    this.focusNode,
   });
 
   final String? poster;
@@ -30,6 +31,7 @@ class FocusableImage extends StatelessWidget {
   final GestureTapCallback? onTap;
   final ValueChanged<bool>? onFocusChange;
   final Map<String, String>? httpHeaders;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class FocusableImage extends StatelessWidget {
       height: height,
       selected: selected,
       autofocus: autofocus,
+      focusNode: focusNode,
       onTap: onTap,
       onFocusChange: onFocusChange,
       child:
