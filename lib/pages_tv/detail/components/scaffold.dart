@@ -131,12 +131,13 @@ class _DetailScaffoldState<T extends MediaBase> extends State<DetailScaffold<T>>
   }
 
   Widget _buildBackground(BuildContext context, T item, bool overlay) {
+    final backdrop = item is TVEpisode ? item.poster : item.backdrop;
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (item.backdrop != null)
+        if (backdrop != null)
           AsyncImage(
-            item.backdrop!,
+            backdrop,
             errorWidget:
                 (_, _, _) => Image.asset(switch (Theme.of(context).brightness) {
                   Brightness.dark => 'assets/tv/images/bg-pixel.webp',
@@ -165,12 +166,12 @@ class _DetailScaffoldState<T extends MediaBase> extends State<DetailScaffold<T>>
           decoration:
               overlay
                   ? BoxDecoration(
-                    color: Theme.of(context).scaffoldBackgroundColor.withAlpha(item.backdrop != null ? 0xDD : 0xAA),
+                    color: Theme.of(context).scaffoldBackgroundColor.withAlpha(backdrop != null ? 0xDD : 0xAA),
                   )
                   : BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Theme.of(context).scaffoldBackgroundColor.withAlpha(item.backdrop != null ? 0xEE : 0xAA),
+                        Theme.of(context).scaffoldBackgroundColor.withAlpha(backdrop != null ? 0xEE : 0xAA),
                         Theme.of(context).scaffoldBackgroundColor.withAlpha(0x66),
                       ],
                       stops: const [0.3, 0.8],
